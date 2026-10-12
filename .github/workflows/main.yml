@@ -1,0 +1,18 @@
+name: telegram-test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  send-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+
+      - name: Run Telegram test
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python script.py
