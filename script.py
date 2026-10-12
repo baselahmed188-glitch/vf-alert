@@ -41,11 +41,13 @@ def get_numbers():
 
         try:
             page = browser.new_page(locale="ar-EG")
+
             page.goto(
                 URL,
                 wait_until="domcontentloaded",
                 timeout=60000
             )
+
             page.wait_for_timeout(15000)
 
             text = page.locator("body").inner_text()
@@ -86,7 +88,9 @@ def main():
         return
 
     if STATE_FILE.exists():
-        previous = set(json.loads(STATE_FILE.read_text()))
+        previous = set(
+            json.loads(STATE_FILE.read_text())
+        )
     else:
         previous = set()
 
@@ -94,13 +98,24 @@ def main():
 
     if not STATE_FILE.exists():
         print("First scan: baseline created.")
+
+    elif new_numbers:
+        sorted_numbers = sorted(new_numbers)
+
+        message = (
+            "Vodafone RED Alert\n\n"
+            "New numbers containing 00:\n\n"
+            + "\n".join(sorted_numbers)
+            + f"\n\nTotal new numbers: {len(sorted_numbers)}"
+        )
+
+        send_telegram(message)
+
+        print("One Telegram alert sent.")
+        print("New numbers:", len(sorted_numbers))
+
     else:
-        for number in sorted(new_numbers):
-            send_telegram(
-                f"Vodafone RED Alert\n"
-                f"New number containing 00:\n{number}"
-            )
-            print("Alert sent:", number)
+        print("No new matching numbers. No alert sent.")
 
     updated = previous | numbers
 
