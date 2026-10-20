@@ -3,7 +3,7 @@ name: Vodafone RED Alert
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */2 * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
